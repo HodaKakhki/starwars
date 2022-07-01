@@ -15,20 +15,22 @@ const Planets = () => {
     () => fetchPlanets(page),
     {
       keepPreviousData: true,
-      staleTime: 5000,
+      staleTime: 2000,
     }
   );
-  console.log(page);
+  console.log("page", latestData);
+
   return (
     <div>
       <h2>Planets</h2>
 
+      {status === "loading" && <div>Loading data</div>}
       {status === "error" && <div>Error fetching data</div>}
       {status === "success" && (
         <>
           <button
             onClick={() => setPage((old) => Math.max(old - 1, 1))}
-            // disabled={page === 1}
+            disabled={page === 1}
           >
             Previous Page
           </button>
@@ -36,10 +38,10 @@ const Planets = () => {
           <button
             onClick={() =>
               setPage((old) =>
-                !latestData || !latestData.next ? old : old + 1
+                !latestData || !latestData.next ? old + 1 : old
               )
             }
-            // disabled={!latestData || !latestData.next}
+            disabled={latestData || latestData?.next}
           >
             Next page
           </button>
