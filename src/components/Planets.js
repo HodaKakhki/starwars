@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 import { Planet } from "./Planet";
 
 const fetchPlanets = async (page) => {
-  const res = await axios.get(`http://swapi.dev/api/planets/?page=${page}`);
+  const res = await axios.get(`https://swapi.dev/api/planets/?page=${page}`);
   return res;
 };
 
