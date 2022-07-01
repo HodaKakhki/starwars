@@ -1,25 +1,55 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Planet } from "./Planet";
 
-const fetchPlanets = async () => {
-  const res = await fetch("http://swapi.dev/api/planets");
-  return res.json();
+const fetchPlanets = async (page) => {
+  const res = await axios.get(`http://swapi.dev/api/planets/?page=${page}`);
+  return res;
 };
+
 const Planets = () => {
-  const { data, status } = useQuery("planets", fetchPlanets);
-  console.log(data);
+  const [page, setPage] = useState(1);
+  const { data, latestData, status } = useQuery(
+    "planet",
+    () => fetchPlanets(page),
+    {
+      keepPreviousData: true,
+      staleTime: 5000,
+    }
+  );
+  console.log(page);
   return (
     <div>
       <h2>Planets</h2>
-      {status === "loading" && <div>Loading data...</div>}
+
       {status === "error" && <div>Error fetching data</div>}
       {status === "success" && (
-        <div>
-          {data.results.map((planet) => (
-            <Planet key={planet.name} planet={planet} />
-          ))}
-        </div>
+        <>
+          <button
+            onClick={() => setPage((old) => Math.max(old - 1, 1))}
+            // disabled={page === 1}
+          >
+            Previous Page
+          </button>
+          <span>{page}</span>
+          <button
+            onClick={() =>
+              setPage((old) =>
+                !latestData || !latestData.next ? old : old + 1
+              )
+            }
+            // disabled={!latestData || !latestData.next}
+          >
+            Next page
+          </button>
+
+          <div>
+            {data.data.results.map((planet) => (
+              <Planet key={planet.name} planet={planet} />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

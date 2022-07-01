@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 function App() {
   const [page, setPage] = useState("planets");
   return (
-    <div className="App">
+    <>
       <QueryClientProvider client={queryClient}>
         <h1>Star Wars Info</h1>
         <Navbar setPage={setPage} />
@@ -18,7 +18,7 @@ function App() {
         </div>
         <ReactQueryDevtools initialIsOpen={true} />
       </QueryClientProvider>
-    </div>
+    </>
   );
 }
 
